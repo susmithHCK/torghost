@@ -70,10 +70,12 @@ def ip():
 signal.signal(signal.SIGINT, sigint_handler)
 
 TorrcCfgString = """
+# If someone could please tell me what this line with VirtualAddrNetwork does? I'm leaving it there since SusmithHCK designed the program that way, and I'm only trying to fix it by adding the DNS fixing lines.
 VirtualAddrNetwork 10.0.0.0/10
-AutomapHostsOnResolve 1
 TransPort 9040
 DNSPort 53
+AutomapHostsOnResolve 1
+AutomapHostsSuffixes .exit,.onion
 """
 
 resolvString = "nameserver 127.0.0.1"
