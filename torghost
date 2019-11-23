@@ -75,11 +75,12 @@ signal.signal(signal.SIGINT, sigint_handler)
 TorrcCfgString = """
 
 ##/////ADDED BY TORGHOST ///
-VirtualAddrNetwork 10.0.0.0/10
+VirtualAddrNetwork 10.192.0.0/10
 AutomapHostsOnResolve 1
-TransPort 9040
-DNSPort 53
+TransPort auto
+DNSPort auto
 ControlPort 9051
+
 
 
 """
