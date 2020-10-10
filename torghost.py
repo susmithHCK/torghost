@@ -181,6 +181,7 @@ def stop_torghost():
 	iptables -X
 	"""
     os.system(IpFlush)
+    with open(Torrc , "w").close()
     os.system('sudo fuser -k 9051/tcp > /dev/null 2>&1')
     print(bcolors.GREEN + '[done]' + bcolors.ENDC)
     print(t() + ' Restarting Network manager'),
