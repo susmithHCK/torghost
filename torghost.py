@@ -11,6 +11,9 @@ import signal
 from stem import Signal
 from stem.control import Controller
 from packaging import version
+from pyfiglet import Figlet
+import colorama
+
 
 VERSION = "3.1.1"
 
@@ -44,17 +47,13 @@ def sigint_handler(signum, frame):
 
 
 def logo():
-    print(bcolors.RED + bcolors.BOLD)
-    print("""
-      _____           ____ _               _
-     |_   _|__  _ __ / ___| |__   ___  ___| |_
-       | |/ _ \| '__| |  _| '_ \ / _ \/ __| __|
-       | | (_) | |  | |_| | | | | (_) \__ \ |_
-       |_|\___/|_|   \____|_| |_|\___/|___/\__|
-	{V} - github.com/SusmithKrishnan/torghost
-
-    """.format(V=VERSION))
-    print(bcolors.ENDC)
+    colorama.init()
+    font = Figlet(font="slant")
+    part1 = font.renderText("torghost")
+    color = colorama.Fore.LIGHTMAGENTA_EX
+    reset = colorama.Fore.RESET
+    print(f"{color}{part1}{reset}")
+    print(f"{color}Banner Made by Alireza-Mani{reset}")
 
 
 def usage():
@@ -130,7 +129,7 @@ def start_torghost():
     os.system('sudo fuser -k 9051/tcp > /dev/null 2>&1')
     print(bcolors.GREEN + '[done]' + bcolors.ENDC)
     print(t() + ' Starting new tor daemon '),
-    os.system('sudo -u debian-tor tor -f /etc/tor/torghostrc > /dev/null'
+    os.system('sudo -u tor tor -f /etc/tor/torghostrc > /dev/null'
               )
     print(bcolors.GREEN + '[done]' + bcolors.ENDC)
     print(t() + ' setting up iptables rules'),
@@ -158,7 +157,7 @@ def start_torghost():
 	iptables -A OUTPUT -m owner --uid-owner $TOR_UID -j ACCEPT
 	iptables -A OUTPUT -j REJECT
 	""" \
-        % subprocess.getoutput('id -ur debian-tor')
+        % subprocess.getoutput('id -ur tor')
 
     os.system(iptables_rules)
     print(bcolors.GREEN + '[done]' + bcolors.ENDC)
@@ -181,6 +180,7 @@ def stop_torghost():
 	iptables -X
 	"""
     os.system(IpFlush)
+    open(Torrc , "w").close()
     os.system('sudo fuser -k 9051/tcp > /dev/null 2>&1')
     print(bcolors.GREEN + '[done]' + bcolors.ENDC)
     print(t() + ' Restarting Network manager'),
