@@ -1,15 +1,16 @@
-echo "Torghost installer v3.0"
+echo "Torghost installer manjaro version"
 echo "Installing prerequisites "
-sudo apt-get install tor python3-pip -y 
+sudo pacman -S tor python-pip -y 
+sudo pacman -S gcc
 echo "Installing dependencies "
-sudo pip3 install -r requirements.txt 
+sudo pip install -r requirements.txt 
 mkdir build
 cd build
-cython3 ../torghost.py --embed -o torghost.c --verbose
+cython ../torghost.py --embed -o torghost.c --verbose
 if [ $? -eq 0 ]; then
     echo [SUCCESS] Generated C code
 else
-    echo [ERROR] Build failed. Unable to generate C code using cython3
+    echo [ERROR] Build failed. Unable to generate C code using cython
     exit 1
 fi
 gcc -Os -I /usr/include/python3.8 -o torghost torghost.c -lpython3.8 -lpthread -lm -lutil -ldl
