@@ -5,6 +5,13 @@ echo "Installing dependencies "
 sudo pip3 install -r requirements.txt 
 mkdir build
 cd build
+py3_version=$(python3 -V | cut -d' ' -f2 | cut -d'.' -f1,2)
+if [ $? -eq 0 ]; then
+	echo [SUCCESS] Python ${py3_version} installed
+else
+	echo [ERROR] Python3 version not found
+	exit 1
+fi
 cython3 ../torghost.py --embed -o torghost.c --verbose
 if [ $? -eq 0 ]; then
     echo [SUCCESS] Generated C code
@@ -12,9 +19,9 @@ else
     echo [ERROR] Build failed. Unable to generate C code using cython3
     exit 1
 fi
-gcc -Os -I /usr/include/python3.8 -o torghost torghost.c -lpython3.8 -lpthread -lm -lutil -ldl
+gcc -Os -I /usr/include/python${py3_version} -o torghost torghost.c -lpython${py3_version} -lpthread -lm -lutil -ldl
 if [ $? -eq 0 ]; then
-    echo [SUCCESS] Compiled to static binay 
+    echo [SUCCESS] Compiled to static binary 
 else
     echo [ERROR] Build failed
     exit 1
@@ -24,6 +31,6 @@ if [ $? -eq 0 ]; then
     echo [SUCCESS] Copied binary to /usr/bin 
 else
     echo [ERROR] Unable to copy
-    ecit 1
+    exit 1
 fi
 
