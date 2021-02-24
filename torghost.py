@@ -72,13 +72,20 @@ def usage():
 
 
 def ip():
+    iteration=[]
     while True:
-        try:
-            jsonRes = get(IP_API).json()
-            ipTxt = jsonRes["ip"]
-        except:
-            continue
-        break
+        if len(iteration) < 30:
+            try:
+                iteration.append(1)
+                jsonRes = get(IP_API).json()
+                ipTxt = jsonRes["ip"]
+            except:
+                time.sleep(1)            
+                continue
+            break
+        else:
+            print(t() + ' Connection Failed')
+            quit()
     return ipTxt
 
 
@@ -168,6 +175,8 @@ def start_torghost():
 
 def stop_torghost():
     print(bcolors.RED + t() + 'STOPPING torghost' + bcolors.ENDC)
+    print(t() + ' Disconnecting all devices')
+    os.system('connection=$( nmcli d | grep -w "connected" )\n while [ -n "$connection" ]; do\n        device="${connection%% *}"\n        device="${connection%% *}"\n        nmcli d disconnect $device\n        connection=$( nmcli d | grep -w "connected" )\ndone')
     print(t() + ' Flushing iptables, resetting to default'),
     os.system('mv /etc/resolv.conf.bak /etc/resolv.conf')
     IpFlush = \
@@ -184,10 +193,9 @@ def stop_torghost():
     os.system('sudo fuser -k 9051/tcp > /dev/null 2>&1')
     print(bcolors.GREEN + '[done]' + bcolors.ENDC)
     print(t() + ' Restarting Network manager'),
-    os.system('service network-manager restart')
+    os.system('service NetworkManager restart')
     print(bcolors.GREEN + '[done]' + bcolors.ENDC)
     print(t() + ' Fetching current IP...')
-    time.sleep(3)
     print(t() + ' CURRENT IP : ' + bcolors.GREEN + ip() + bcolors.ENDC)
 
 
