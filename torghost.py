@@ -184,7 +184,7 @@ def stop_torghost():
     os.system('sudo fuser -k 9051/tcp > /dev/null 2>&1')
     print(bcolors.GREEN + '[done]' + bcolors.ENDC)
     print(t() + ' Restarting Network manager'),
-    os.system('service network-manager restart')
+    os.system('systemctl restart NetworkManager.service')
     print(bcolors.GREEN + '[done]' + bcolors.ENDC)
     print(t() + ' Fetching current IP...')
     time.sleep(3)
